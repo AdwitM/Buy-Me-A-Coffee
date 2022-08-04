@@ -185,44 +185,44 @@ export default function Home() {
     return ( 
       < div className={ styles.container }>
 	    < Head>
-		  < title> Buy Nero a Coffee!< /title>
+		  < title> Buy Nero a Coffee!</title>
 			< meta name="description" content="Tipping site" />
 			< link rel="icon" href="/favicon.png" />
-	    < /Head>
+	    </Head>
 			< main className={ styles.main }>
-			< h1 className={ styles.title }> Buy Nero a Coffee!< /h1> { currentAccount ? (
+			<h1 className={ styles.title }> Buy Nero a Coffee!</h1> { currentAccount ? (
 			< div>
 			< form>
 			< div>
-			< label> Name< /label>
+			<label> Name</label>
 			< br />
 			< input id="name" type="text" placeholder="Anon Ser" onChange={ onNameChange } />
-			< /div>
+			</div>
 			< br />
 			< div>
-			< label> Send a Message
-			< /label>
+			<label> Send a Message
+			</label>
 			< br />
 			< textarea rows={ 3 } placeholder="Enjoy your coffee!" id="message" onChange={ onMessageChange } required>
-			< /textarea>
-			< /div>
+			</textarea>
+			</div>
 			< div>
-			< button type="button" onClick={ buyCoffee }> Send 1 Coffee for 0.001 ETH
-			< /button>
-			< /div>
-			< /form>
-			< /div> ) : (
-			< button onClick={ connectWallet }> Connect your wallet< /button> ) }
-			< /main> { currentAccount && (
+			<button type="button" onClick={ buyCoffee }> Send 1 Coffee for 0.001 ETH
+			</button>
+			</div>
+			</form>
+			</div> ) : (
+			< button onClick={ connectWallet }> Connect your wallet</button> ) }
+			</main> { currentAccount && (
 			< h1> Coffees Received!
-			< /h1>)} { currentAccount && (memos.map((memo, idx) => { return (
+			</h1>)} { currentAccount && (memos.map((memo, idx) => { return (
 			< div key={ idx } style={ { border: "2px solid", "borderRadius": "5px", padding: "5px", margin: "5px" } }>
-			< p style={ { "fontWeight": "bold" } }> "{memo.message}"< /p>
-      < p> From: { memo.name } at { memo.timestamp.toString() }< /p>
-      < /div> ) })) }
+			< p style={ { "fontWeight": "bold" } }> "{memo.message}"</p>
+      < p> From: { memo.name } at { memo.timestamp.toString() }</p>
+      </div> ) })) }
 			< footer className={ styles.footer }>
-			< a href="https://github.com/AdwitM/Buy-Me-A-Coffee" target="_blank" rel="noopener noreferrer"> Check Out the Source Code Here< /a>
-      < /footer>
-			< /div>
+			< a href="https://github.com/AdwitM/Buy-Me-A-Coffee" target="_blank" rel="noopener noreferrer"> Check Out the Source Code Here</a>
+      </footer>
+			</div>
       )
 }
