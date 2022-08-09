@@ -218,7 +218,7 @@ export default function Home() {
                 />
               </div>
               <br />
-              <div class="formgroup">
+              <div className="formgroup">
                 <label style={{ color: 'white' }}>
                   Send me a message
                 </label>
