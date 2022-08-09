@@ -188,8 +188,8 @@ export default function Home() {
         <title>Buy Nero a Coffee!</title>
         <meta name="description" content="Tipping site" />
         <link rel="icon" href="/favicon.png" />
-        <style>@import url('https://fonts.googleapis.com/css?family=Oswald&display=swap');
-</style>
+        {/* <style>@import url('https://fonts.googleapis.com/css?family=Oswald&display=swap');
+</style> */}
       </Head>
 
       <header style={{ width: '100%', padding: '15px' }}>
@@ -204,7 +204,7 @@ export default function Home() {
         {currentAccount ? (
           <div>
             <form>
-              <div class="formgroup">
+              <div className="formgroup">
                 <label style={{ color: 'white' }}>
                   Name
                 </label>
@@ -255,7 +255,7 @@ export default function Home() {
             {currentAccount && (memos.map((memo, idx) => {
               return (
                 <div key={idx} style={{ border: "2px solid", "border-radius": "5px", padding: "5px", margin: "5px" }}>
-                  <p style={{ "font-weight": "bold" }}>"{memo.message}"</p>
+                  <p style={{ "font-weight": "bold" }}>&quot;{memo.message}&quot;</p>
                   <p>From: {memo.name} at {memo.timestamp.toString()}</p>
                 </div>
               )
