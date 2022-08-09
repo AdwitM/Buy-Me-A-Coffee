@@ -5,45 +5,46 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image:url("https://w.wallhaven.cc/full/lm/wallhaven-lm638p.jpg");
+  background-size: cover;
+  background-position: center;
+  background-image:url("https://i.ibb.co/25DmgW4/janko-ferlic-h9-Iq22-JJl-Gk-unsplash-1.jpg");
+}
+
+.left{
+  text-align: left;
+  margin-left: 10%;
 }
 
 .main {
-  padding: 5rem 0;
+  padding: 15px;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 
 .footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 30px;
-}
-
-.title a {
-  color: #0070f3;
-  text-decoration: none;
-}
-
-.title a:hover,
-.title a:focus,
-.title a:active {
-  text-decoration: underline;
+  text-align: right;
+  padding-bottom: 20px;
+  color: white;
+  width: 100%;
 }
 
 .title {
   margin: 0;
   line-height: 1.15;
   font-size: 4rem;
+  color: #ffffff;
 }
 
 .title,
 .description {
-  text-align: center;
+  margin: 0;
+  font-size: 35px;
+  font-weight: bold;
+  color: white;
 }
 
 .description {
@@ -84,8 +85,8 @@
 .card:hover,
 .card:focus,
 .card:active {
-  color: #0070f3;
-  border-color: #0070f3;
+  color: #ffffff;
+  border-color: #ffffff;
 }
 
 .card h2 {
@@ -104,9 +105,90 @@
   margin-left: 0.5rem;
 }
 
+.connectwalletbutton{
+  background-image: linear-gradient(
+    to right,
+    #ff8177 0%,
+    #ff867a 0%,
+    #ff8c7f 21%,
+    #f99185 52%,
+    #cf556c 78%,
+    #b12a5b 100%
+  );
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+  padding: 20px;
+  border: none;
+/*   border-top-left-radius:15px;  
+  border-top-right-radius:15px;  
+  border-bottom-right-radius:15px;  
+  border-bottom-left-radius:15px;  */
+  border-radius: 15px;
+  font-family: Oswald;
+  font-size:20px;
+}
+.sendcoffeebutton{
+  background: -webkit-linear-gradient(left, #a200d6, #ff6fdf);
+  font-size: 18px;
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+  margin: 20px 10px;
+  border-radius: 20px;
+  padding: 0px 2rem;
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+  padding: 20px;
+  border: none;
+  border-top-left-radius:15px;  
+  border-top-right-radius:15px;  
+  border-bottom-right-radius:15px;  
+  border-bottom-left-radius:15px; 
+  font-family: Oswald;
+  font-size:15px;
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;
     flex-direction: column;
   }
+}
+
+@-webkit-keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-moz-keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.sendMeAMessage{
+  border-radius: 12px;
+  padding: 12px;
 }

@@ -1,228 +1,281 @@
 import abi from '../utils/BuyMeACoffee.json';
 import {
-    ethers
+  ethers
 } from "ethers";
 import Head from 'next/head'
 import Image from 'next/image'
 import React, {
-    useEffect,
-    useState
+  useEffect,
+  useState
 } from "react";
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
-    // Contract Address & ABI
-    const contractAddress = "0x42D48821026aE65f5BA2590a7EB58209618AD348";
-    const contractABI = abi.abi;
+  // Contract Address & ABI
+  const contractAddress = "0x42D48821026aE65f5BA2590a7EB58209618AD348";
+  const contractABI = abi.abi;
 
-    // Component state
-    const [currentAccount, setCurrentAccount] = useState("");
-    const [name, setName] = useState("");
-    const [message, setMessage] = useState("");
-    const [memos, setMemos] = useState([]);
+  // Component state
+  const [currentAccount, setCurrentAccount] = useState("");
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [memos, setMemos] = useState([]);
 
-    const onNameChange = (event) => {
-        setName(event.target.value);
+  const onNameChange = (event) => {
+    setName(event.target.value);
+  }
+
+  const onMessageChange = (event) => {
+    setMessage(event.target.value);
+  }
+
+  // Wallet connection logic
+  const isWalletConnected = async () => {
+    try {
+      const {
+        ethereum
+      } = window;
+
+      const accounts = await ethereum.request({
+        method: 'eth_accounts'
+      })
+      console.log("accounts: ", accounts);
+
+      if (accounts.length > 0) {
+        const account = accounts[0];
+        console.log("wallet is connected! " + account);
+      } else {
+        console.log("make sure MetaMask is connected");
+      }
+    } catch (error) {
+      console.log("error: ", error);
     }
+  }
 
-    const onMessageChange = (event) => {
-        setMessage(event.target.value);
+  const connectWallet = async () => {
+    try {
+      const {
+        ethereum
+      } = window;
+
+      if (!ethereum) {
+        console.log("please install MetaMask");
+      }
+
+      const accounts = await ethereum.request({
+        method: 'eth_requestAccounts'
+      });
+
+      setCurrentAccount(accounts[0]);
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    // Wallet connection logic
-    const isWalletConnected = async () => {
-        try {
-            const {
-                ethereum
-            } = window;
+  const buyCoffee = async () => {
+    try {
+      const {
+        ethereum
+      } = window;
 
-            const accounts = await ethereum.request({
-                method: 'eth_accounts'
-            })
-            console.log("accounts: ", accounts);
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum, "any");
+        const signer = provider.getSigner();
+        const buyMeACoffee = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          signer
+        );
 
-            if (accounts.length > 0) {
-                const account = accounts[0];
-                console.log("wallet is connected! " + account);
-            } else {
-                console.log("make sure MetaMask is connected");
-            }
-        } catch (error) {
-            console.log("error: ", error);
+        console.log("buying coffee..")
+        const coffeeTxn = await buyMeACoffee.buyCoffee(
+          name ? name : "Your Name",
+          message ? message : "Enjoy your coffee!", {
+            value: ethers.utils.parseEther("0.001")
+          }
+        );
+
+        await coffeeTxn.wait();
+
+        console.log("mined ", coffeeTxn.hash);
+
+        console.log("coffee purchased!");
+
+        // Clear the form fields.
+        setName("");
+        setMessage("");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Function to fetch all memos stored on-chain.
+  const getMemos = async () => {
+    try {
+      const {
+        ethereum
+      } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const buyMeACoffee = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          signer
+        );
+
+        console.log("fetching memos from the blockchain..");
+        const memos = await buyMeACoffee.getMemos();
+        console.log("fetched!");
+        setMemos(memos);
+      } else {
+        console.log("Metamask is not connected");
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    let buyMeACoffee;
+    isWalletConnected();
+    getMemos();
+
+    // Create an event handler function for when someone sends
+    // us a new memo.
+    const onNewMemo = (from, timestamp, name, message) => {
+      console.log("Memo received: ", from, timestamp, name, message);
+      setMemos((prevState) => [
+        ...prevState,
+        {
+          address: from,
+          timestamp: new Date(timestamp * 1000),
+          message,
+          name
         }
-    }
-
-    const connectWallet = async () => {
-        try {
-            const {
-                ethereum
-            } = window;
-
-            if (!ethereum) {
-                console.log("please install MetaMask");
-            }
-
-            const accounts = await ethereum.request({
-                method: 'eth_requestAccounts'
-            });
-
-            setCurrentAccount(accounts[0]);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    const buyCoffee = async () => {
-        try {
-            const {
-                ethereum
-            } = window;
-
-            if (ethereum) {
-                const provider = new ethers.providers.Web3Provider(ethereum, "any");
-                const signer = provider.getSigner();
-                const buyMeACoffee = new ethers.Contract(
-                    contractAddress,
-                    contractABI,
-                    signer
-                );
-
-                console.log("buying coffee..")
-                const coffeeTxn = await buyMeACoffee.buyCoffee(
-                    name ? name : "Your Name",
-                    message ? message : "Enjoy your coffee!", {
-                        value: ethers.utils.parseEther("0.001")
-                    }
-                );
-
-                await coffeeTxn.wait();
-
-                console.log("mined ", coffeeTxn.hash);
-
-                console.log("coffee purchased!");
-
-                // Clear the form fields.
-                setName("");
-                setMessage("");
-            }
-        } catch (error) {
-            console.log(error);
-        }
+      ]);
     };
 
-    // Function to fetch all memos stored on-chain.
-    const getMemos = async () => {
-        try {
-            const {
-                ethereum
-            } = window;
-            if (ethereum) {
-                const provider = new ethers.providers.Web3Provider(ethereum);
-                const signer = provider.getSigner();
-                const buyMeACoffee = new ethers.Contract(
-                    contractAddress,
-                    contractABI,
-                    signer
-                );
+    const {
+      ethereum
+    } = window;
 
-                console.log("fetching memos from the blockchain..");
-                const memos = await buyMeACoffee.getMemos();
-                console.log("fetched!");
-                setMemos(memos);
-            } else {
-                console.log("Metamask is not connected");
-            }
+    // Listen for new memo events.
+    if (ethereum) {
+      const provider = new ethers.providers.Web3Provider(ethereum, "any");
+      const signer = provider.getSigner();
+      buyMeACoffee = new ethers.Contract(
+        contractAddress,
+        contractABI,
+        signer
+      );
 
-        } catch (error) {
-            console.log(error);
-        }
-    };
+      buyMeACoffee.on("NewMemo", onNewMemo);
+    }
 
-    useEffect(() => {
-        let buyMeACoffee;
-        isWalletConnected();
-        getMemos();
+    return () => {
+      if (buyMeACoffee) {
+        buyMeACoffee.off("NewMemo", onNewMemo);
+      }
+    }
+  }, []);
 
-        // Create an event handler function for when someone sends
-        // us a new memo.
-        const onNewMemo = (from, timestamp, name, message) => {
-            console.log("Memo received: ", from, timestamp, name, message);
-            setMemos((prevState) => [
-                ...prevState,
-                {
-                    address: from,
-                    timestamp: new Date(timestamp * 1000),
-                    message,
-                    name
-                }
-            ]);
-        };
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>Buy Nero a Coffee!</title>
+        <meta name="description" content="Tipping site" />
+        <link rel="icon" href="/favicon.png" />
+        <style>@import url('https://fonts.googleapis.com/css?family=Oswald&display=swap');
+</style>
+      </Head>
 
-        const {
-            ethereum
-        } = window;
+      <header style={{ width: '100%', padding: '15px' }}>
+        <h1 className={styles.title}>
+          Buy Me a Coffee! ☕
+        </h1>
+      </header>
 
-        // Listen for new memo events.
-        if (ethereum) {
-            const provider = new ethers.providers.Web3Provider(ethereum, "any");
-            const signer = provider.getSigner();
-            buyMeACoffee = new ethers.Contract(
-                contractAddress,
-                contractABI,
-                signer
-            );
+      <main className={styles.main}>
 
-            buyMeACoffee.on("NewMemo", onNewMemo);
-        }
 
-        return () => {
-            if (buyMeACoffee) {
-                buyMeACoffee.off("NewMemo", onNewMemo);
-            }
-        }
-    }, []);
+        {currentAccount ? (
+          <div>
+            <form>
+              <div class="formgroup">
+                <label style={{ color: 'white' }}>
+                  Name
+                </label>
+                <br />
 
-    return ( 
-      < div className={ styles.container }>
-	    < Head>
-		  < title> Buy Nero a Coffee!</title>
-			< meta name="description" content="Tipping site" />
-			< link rel="icon" href="/favicon.png" />
-	    </Head>
-			< main className={ styles.main }>
-			<h1 className={ styles.title }> Buy Nero a Coffee!</h1> { currentAccount ? (
-			< div>
-			< form>
-			< div>
-			<label> Name</label>
-			< br />
-			< input id="name" type="text" placeholder="Anon Ser" onChange={ onNameChange } />
-			</div>
-			< br />
-			< div>
-			<label> Send a Message
-			</label>
-			< br />
-			< textarea rows={ 3 } placeholder="Enjoy your coffee!" id="message" onChange={ onMessageChange } required>
-			</textarea>
-			</div>
-			< div>
-			<button type="button" onClick={ buyCoffee }> Send 1 Coffee for 0.001 ETH
-			</button>
-			</div>
-			</form>
-			</div> ) : (
-			< button onClick={ connectWallet }> Connect your wallet</button> ) }
-			</main> { currentAccount && (
-			< h1> Coffees Received!
-			</h1>)} { currentAccount && (memos.map((memo, idx) => { return (
-			< div key={ idx } style={ { border: "2px solid", "borderRadius": "5px", padding: "5px", margin: "5px" } }>
-			< p style={ { "fontWeight": "bold" } }> "{memo.message}"</p>
-      < p> From: { memo.name } at { memo.timestamp.toString() }</p>
-      </div> ) })) }
-			< footer className={ styles.footer }>
-			< a href="https://github.com/AdwitM/Buy-Me-A-Coffee" target="_blank" rel="noopener noreferrer"> Check Out the Source Code Here</a>
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="anon"
+                  onChange={onNameChange}
+                />
+              </div>
+              <br />
+              <div class="formgroup">
+                <label style={{ color: 'white' }}>
+                  Send me a message
+                </label>
+                <br />
+
+                <textarea
+                  rows={3}
+                  placeholder="Enjoy your coffee!"
+                  id="message"
+                  className={styles.sendMeAMessage}
+                  onChange={onMessageChange}
+                  required
+                >
+                </textarea>
+              </div>
+              <div>
+                <button
+                  className={styles.sendcoffeebutton}
+                  type="button"
+                  onClick={buyCoffee}
+                >
+                  Send 1 Coffee for 0.001ETH
+                </button>
+              </div>
+            </form>
+          </div>
+        ) : (
+            <button className={styles.connectwalletbutton} onClick={connectWallet}> Connect Your Wallet </button>
+          )}
+
+        <div style={{ color: 'white' }}>
+          {currentAccount && (<h1 >Tips Received</h1>)}
+          <div style={{ display: 'flex' }}>
+            {currentAccount && (memos.map((memo, idx) => {
+              return (
+                <div key={idx} style={{ border: "2px solid", "border-radius": "5px", padding: "5px", margin: "5px" }}>
+                  <p style={{ "font-weight": "bold" }}>"{memo.message}"</p>
+                  <p>From: {memo.name} at {memo.timestamp.toString()}</p>
+                </div>
+              )
+            }))}
+          </div>
+        </div>
+      </main>
+
+
+
+      <footer className={styles.footer}>
+
+        <a
+          href="https://github.com/AdwitM/Buy-Me-A-Coffee"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src="https://www.pngkey.com/png/full/178-1787366_coming-soon-github-white-icon-png.png" alt="GitHub Logo" style={{ width: '50px', height: '50px', padding: '5px' }}></img>
+        </a>
       </footer>
-			</div>
-      )
+    </div>
+  )
 }
