@@ -199,8 +199,7 @@ export default function Home() {
       </header>
 
       <main className={styles.main}>
-
-
+        
         {currentAccount ? (
           <div>
             <form>
