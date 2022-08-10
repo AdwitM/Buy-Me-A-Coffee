@@ -188,8 +188,12 @@ export default function Home() {
         <title>Buy Nero a Coffee!</title>
         <meta name="description" content="Tipping site" />
         <link rel="icon" href="/favicon.png" />
-        {/* <style>@import url('https://fonts.googleapis.com/css?family=Oswald&display=swap');
-</style> */}
+        <style>@import url(&quot;https://fonts.googleapis.com/css?family=Oswald&display=swap&quot;)
+        <style>@import url(&quot;https://fonts.googleapis.com/css?family=Poppins&display=swap&quot;)
+        <style>@import url(&quot;https://fonts.googleapis.com/css?family=Merriweather&display=swap&quot;)
+        </style>
+        </style>
+        </style>
       </Head>
 
       <header style={{ width: '100%', padding: '15px' }}>
@@ -204,7 +208,7 @@ export default function Home() {
           <div>
             <form>
               <div className="formgroup">
-                <label style={{ color: 'white' }}>
+                <label className={styles.textforbutton}>
                   Name
                 </label>
                 <br />
@@ -212,22 +216,23 @@ export default function Home() {
                 <input
                   id="name"
                   type="text"
-                  placeholder="anon"
+                  placeholder="Name"
+                  className={styles.sendMeAMessage}
                   onChange={onNameChange}
                 />
               </div>
               <br />
-              <div className="formgroup">
-                <label style={{ color: 'white' }}>
-                  Send me a message
+              <div>
+                <label className={styles.textforbutton}>
+                  Send Me A Message
                 </label>
                 <br />
 
                 <textarea
                   rows={3}
-                  placeholder="Enjoy your coffee!"
                   id="message"
                   className={styles.sendMeAMessage}
+                  placeholder="Enjoy Your Coffee!"
                   onChange={onMessageChange}
                   required
                 >
@@ -237,6 +242,7 @@ export default function Home() {
                 <button
                   className={styles.sendcoffeebutton}
                   type="button"
+      
                   onClick={buyCoffee}
                 >
                   Send 1 Coffee for 0.001ETH

@@ -37,6 +37,8 @@
   line-height: 1.15;
   font-size: 4rem;
   color: #ffffff;
+  font-family: Merriweather;
+  font-weight: bold;
 }
 
 .title,
@@ -107,13 +109,7 @@
 
 .connectwalletbutton{
   background-image: linear-gradient(
-    to right,
-    #ff8177 0%,
-    #ff867a 0%,
-    #ff8c7f 21%,
-    #f99185 52%,
-    #cf556c 78%,
-    #b12a5b 100%
+    to left, #e96443, #904e95
   );
   background-size: 200% 200%;
   animation: gradient-animation 4s ease infinite;
@@ -132,7 +128,7 @@
   font-size: 18px;
   background-size: 200% 200%;
   animation: gradient-animation 4s ease infinite;
-  margin: 20px 10px;
+  margin-top: 10px;
   border-radius: 20px;
   padding: 0px 2rem;
   background-size: 200% 200%;
@@ -191,4 +187,12 @@
 .sendMeAMessage{
   border-radius: 12px;
   padding: 12px;
+  width: 100%;
+}
+
+.textforbutton{
+  font-family: Poppins;
+  font-size: large;
+  color: white;
+  font-weight: bold;
 }
